@@ -692,6 +692,23 @@ public:
     return true;
   }
 
+  bool getSMSNumber(uint8_t i, String& number){
+    sendAT(GF("+CMGF=1"));
+    if(waitResponse() != 1) return false;
+    sendAT(GF("+CSDH=1"));
+    if(waitResponse() != 1) return false;
+
+    sendAT(GF("+CMGR="), i);
+    if(waitResponse(GF(GSM_NL "+CMGR:"))) {
+      streamSkipUntil(',');
+      streamSkipUntil('"');
+      number = stream.readStringUntil('"');
+      return true;
+    }
+
+    return false;
+  }
+
   bool readSMS(uint8_t i, String& msg){
     sendAT(GF("+CMGF=1"));
     if(waitResponse() != 1) return false;
@@ -705,6 +722,24 @@ public:
       return true;
     }
 
+    return false;
+  }
+
+  bool readSMS(uint8_t i, String& msg, String& number){
+    sendAT(GF("+CMGF=1"));
+    if(waitResponse() != 1) return false;
+    sendAT(GF("+CSDH=1"));
+    if(waitResponse() != 1) return false;
+
+    sendAT(GF("+CMGR="), i);
+    if(waitResponse(GF(GSM_NL "+CMGR:"))) {
+      streamSkipUntil(',');
+      streamSkipUntil('"');
+      number = stream.readStringUntil('"');
+      streamSkipUntil('\n');
+      msg = stream.readStringUntil('\n');
+      return true;
+    }
     return false;
   }
 
