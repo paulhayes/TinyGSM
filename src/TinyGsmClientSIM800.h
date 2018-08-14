@@ -723,7 +723,7 @@ public:
     sendAT(GF("+CMGF=1"));
     if(waitResponse() != 1) return false;
 
-    sendAT(GF("CMGD="), i);
+    sendAT(GF("+CMGD="), i);
     if(waitResponse() != 1) return false;
 
     return true;
@@ -1017,7 +1017,7 @@ public:
     streamWrite("AT", cmd..., GSM_NL);
     stream.flush();
     TINY_GSM_YIELD();
-    //DBG("### AT:", cmd...);
+    //DBG("### AT", cmd...);
   }
 
   // TODO: Optimize this!
